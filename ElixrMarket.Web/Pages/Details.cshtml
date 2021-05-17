@@ -1,0 +1,65 @@
+﻿@page "/Details/{id:int}"
+@model ElixrMarket.Web.Pages.DetailsModel
+
+<div id="details">
+    <div id="page-container">
+        <div id="summary-container">
+            <img id="main-img" src="~/product-media/@Model.Product.Id/img/main.jpg" alt="Main image" />
+            <div id=summary-text>
+                <div id="title">
+                    <h3>@Model.Product.Name</h3>
+                </div>
+                <div>@Model.Product.Summary</div>
+                <div id="btn-container">
+                    <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> - <span>$@Model.Product.Price</span></button>
+                </div>
+            </div>
+        </div>
+        <div>
+            @Model.Product.Description
+        </div>
+    </div>
+
+    <style >
+        #details #page-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: white;
+            padding: 1.5rem;
+        }
+
+        #details #title {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #details #summary-container {
+            display: flex;
+            width: 100%;
+            padding-bottom: 1rem;
+            gap: 1rem;
+            border-bottom: 1px solid #D3D3D3;
+        }
+
+        #details #summary-text {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 60%;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        #details img {
+            display: flex;
+            flex-basis: 40%;
+        }
+
+        #details #btn-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+        }
+    </style>
+</div>

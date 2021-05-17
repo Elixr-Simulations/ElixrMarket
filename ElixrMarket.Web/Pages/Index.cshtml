@@ -1,0 +1,71 @@
+﻿@page
+@using Components
+@using Models 
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div id="index">
+    <div id="list-container">
+        @foreach (var product in Model.Products)
+        {
+            string href = $"/Details/{product.Id}";
+            
+        <div id="product-container">
+            <a id="info-container" href="@href">
+                <div id="img-container">
+                    <img src="~/product-media/@product.Id/img/main.jpg" alt="Main image" />
+                </div>
+                <div id="text-container">
+                    <span>@product.Name</span>
+                </div>
+            </a>
+            <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> - $@product.Price</button>
+        </div>
+        }
+    </div>
+
+    <style>
+        #index #list-container {
+            background-color: white;
+        }
+        #index #product-container {
+            padding: .5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #d9d9d9;
+        }
+
+            #index #product-container:hover {
+                background-color: #e9e9e9;
+                cursor: pointer;
+            }
+
+        #index #img-container {
+            flex-grow: 0;
+            height: 5rem;
+        }
+            #index #img-container > img {
+                height: 100%;
+            }
+
+        #index #info-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #index a {
+            text-decoration: none;
+            color: black;
+        }
+        #index button {
+            flex-grow: 0;
+            margin-right: 2rem;
+        }
+    </style>
+</div>
