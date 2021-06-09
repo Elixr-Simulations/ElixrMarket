@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -33,22 +35,49 @@ namespace ElixrMarket.Web
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ElixrUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ElixrDataContext>();
+            services.AddIdentity<ElixrUser, IdentityRole<Guid>>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.SignIn.RequireConfirmedAccount = true;
+            })
+                .AddEntityFrameworkStores<ElixrDataContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = "/Identity/Account/Login";
+            });
 
             services.AddRazorPages();
+            services.AddControllers();
             services.AddServerSideBlazor();
 
             services.AddScoped<IProductsService, EFCoreProductsService>();
+            services.AddScoped<IEditorService, EFCoreEditorService>();
+            services.AddScoped<DbSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IServiceProvider services, IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var seeder = services.GetRequiredService<DbSeeder>();
+
+            // seed roles
+            services.GetRequiredService<DbSeeder>().SeedRoles();
+            services.GetRequiredService<DbSeeder>().SeedAdmin();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+
+                seeder.SeedDevUsers();
+                seeder.SeedProducts();
             }
             else
             {
@@ -68,6 +97,7 @@ namespace ElixrMarket.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

@@ -9,6 +9,23 @@ body {
     background-color: #d9d9d9;
 }
 
+#main-nav {
+    background-color: black;
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
+.btn-outline-secondary {
+    color: white;
+}
+
+    .btn-outline-secondary:hover {
+        background-color: #67c50a;
+        color: black;
+    }
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;

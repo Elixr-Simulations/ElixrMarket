@@ -47,12 +47,17 @@ namespace ElixrMarket.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [StringLength(15, MinimumLength = 4)]
+            [Display(Name = "Username")]
+            public string Username { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -75,7 +80,7 @@ namespace ElixrMarket.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ElixrUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ElixrUser { UserName = Input.Username, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

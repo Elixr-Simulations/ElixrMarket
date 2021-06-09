@@ -1,4 +1,5 @@
 ﻿using ElixrMarket.Web.Models;
+using ElixrMarket.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -11,25 +12,22 @@ namespace ElixrMarket.Web.Pages
 {
     public class IndexModel : PageModel
     {
-        [BindProperty]
-        public List<Product> Products { get; set; }
-
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        public IActionResult OnGet()
         {
-            _logger = logger;
-        }
-
-        public void OnGet()
-        {
-            Products = new List<Product>()
+            if (HttpContext.User.IsInRole(Constants.Roles.Admin))
             {
-                new Product { Id = 1, Name = "Test product 1", Price = 4.99m },
-                new Product { Id = 2, Name = "Test product 2", Price = 4.99m },
-                new Product { Id = 3, Name = "Test product 3", Price = 4.99m },
-                new Product { Id = 4, Name = "Test product 4", Price = 4.99m }
-            };
+                return new RedirectToPageResult("/admin");
+            }
+            if (HttpContext.User.IsInRole(Constants.Roles.Editor))
+            {
+                return new RedirectToPageResult("/editorhome");
+            }
+            if (HttpContext.User.IsInRole(Constants.Roles.Reviewer))
+            {
+                return new RedirectToPageResult("/reviewerhome");
+            }
+
+            return new RedirectToPageResult("/store");
         }
     }
 }

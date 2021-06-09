@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ElixrMarket.Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Elixr - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/f938e4bcfd.js" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        function goToCart() {
+            let cart = JSON.parse(localStorage.getItem('cart'));
+            if (cart['products'].length == 0) {
+                let cartProductIds = cart['products'].map(p => p.id);
+            }
+            debugger;
+            let url = '/cart/?cart=';
+            for (let i = 0; i < cart['products'].length; i++) {
+                url += cart['products'][i].id + ',';
+            }
+
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

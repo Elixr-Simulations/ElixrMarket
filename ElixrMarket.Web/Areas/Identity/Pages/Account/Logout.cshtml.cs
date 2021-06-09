@@ -37,7 +37,7 @@ namespace ElixrMarket.Web.Areas.Identity.Pages.Account
             }
             else
             {
-                return RedirectToPage();
+                return RedirectToPage("/Index");
             }
         }
     }

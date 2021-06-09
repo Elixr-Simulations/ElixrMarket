@@ -1,0 +1,115 @@
+﻿@page
+@model ElixrMarket.Web.Pages.LibraryModel
+@{
+    ViewData["Title"] = "Library";
+}
+
+<div id="library">
+    <div id="list-container">
+        @foreach (var product in Model.OwnedProducts)
+        {
+            <div class="product-container">
+                <input type="hidden" id="@product.Id-id" value="@product.Id" />
+                <div class="img-container">
+                    <img src="~/product-media/@product.Product.Id/img/main.jpg" alt="Main image" />
+                </div>
+                <div class="name-container">
+                    <span>@product.Product.Name</span>
+                </div>
+
+                <a class="btn btn-primary" href="~/GOG_Galaxy_Hotline_Miami.exe">Download</a>
+            </div>
+        }
+
+    </div>
+
+    <script>
+        // add empty products object to cart if cart is null
+        const initializeCart = () => {
+            if (!localStorage.getItem('cart')) {
+                localStorage.setItem('cart', JSON.stringify({ products: [] }));
+            }
+        }
+
+        const addToCart = (productId) => {
+            // get cart
+            let currentCart = JSON.parse(localStorage.getItem('cart'));
+
+            // get matching product from cart
+            let existingProduct = currentCart['products'].find(p => p.id == productId);
+
+            // if product isn't in cart
+            if (existingProduct == undefined) {
+                currentCart['products'].push({
+                    id: document.getElementById(productId + '-id').value,
+                    price: document.getElementById(productId + '-price').value,
+                    name: document.getElementById(productId + '-name').value,
+                });
+                console.log(currentCart);
+            }
+            // otherwise notify user that it's already in their cart
+            else {
+                Snackbar.show({ pos: 'bottom-center', text: 'This item is already in your cart.' })
+                return;
+            }
+
+            // update cart in local storage
+            localStorage.setItem('cart', JSON.stringify(currentCart));
+
+            let productName = document.getElementById(productId + '-name').value;
+
+            Snackbar.show({ pos: 'bottom-center', text: productName + ' is added.' })
+        }
+
+        // initalize cart on page load
+        initializeCart();
+    </script>
+
+    <style>
+        #library #list-container {
+            background-color: white;
+        }
+
+        #library .product-container {
+            padding: .5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #d9d9d9;
+        }
+
+            #library .product-container:hover {
+                background-color: #e9e9e9;
+                cursor: pointer;
+            }
+
+        #library .img-container {
+            flex-grow: 0;
+            height: 5rem;
+        }
+
+            #library .img-container > img {
+                height: 100%;
+            }
+
+        #library .info-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #library a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #library button {
+            flex-grow: 0;
+            margin-right: 2rem;
+            background-color: #67c50a;
+            border: none;
+        }
+    </style>
+</div>

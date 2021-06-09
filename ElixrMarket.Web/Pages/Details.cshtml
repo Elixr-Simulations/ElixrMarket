@@ -3,24 +3,108 @@
 
 <div id="details">
     <div id="page-container">
-        <div id="summary-container">
-            <img id="main-img" src="~/product-media/@Model.Product.Id/img/main.jpg" alt="Main image" />
-            <div id=summary-text>
-                <div id="title">
-                    <h3>@Model.Product.Name</h3>
+        <div class="d-flex justify-content-between">
+            <h2>@Model.Product.Name</h2>
+            <button class="btn btn-primary w-25"><span style="font-size: 1.5rem;">$@Model.Product.Price - </span><i style="font-size: 1.5rem;" class="fas fa-cart-plus"></i></button>
+        </div>
+        <div id="top-container">
+            <div id="media-carousel" class="w-50 carousel slide" data-ride="carousel" align="center">
+                <!-- slides -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active"> <img src="~/@Model.CarouselMedia[0]" alt="@Model.Product.Name"> </div>
+                    @for (int i = 1; i < Model.CarouselMedia.Length; i++)
+                    {
+                        <div class="carousel-item"> <img src="~/@Model.CarouselMedia[i]" alt="@Model.Product.Name"> </div>
+                    }
                 </div>
-                <div>@Model.Product.Summary</div>
-                <div id="btn-container">
-                    <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> - <span>$@Model.Product.Price</span></button>
+                <!-- Left right -->
+                <a class="carousel-control-prev" href="#media-carousel" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#media-carousel" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+                <!-- Thumbnails -->
+                <ol class="carousel-indicators list-inline">
+                    <li class="list-inline-item active"> <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#media-carousel"> <img src="~/@Model.CarouselMedia[0]" class="img-fluid"> </a> </li>
+                    @for (int i = 1; i < Model.CarouselMedia.Length; i++)
+                    {
+                        <li class="list-inline-item"> <a id="carousel-selector-@i"  data-slide-to="@i" data-target="#media-carousel"> <img src="~/@Model.CarouselMedia[i]" class="img-fluid"> </a> </li>
+                    }
+                </ol>
+            </div>
+            <div id=summary-container>
+                <h4>Details</h4>
+                <div class="d-flex mb-4">
+                    <div class="details-column title col-4">
+                        <div>Genre:</div>
+                        <div>Release date:</div>
+                        <div>Developer:</div>
+                    </div>
+                    <div class="details-column">
+                        <div>@Model.Product.Name</div>
+                        <div>@Model.Product.ReleaseDate</div>
+                        <div>@Model.Product.Developer.UserName</div>
+                    </div>
+                </div>
+                <h4>Requirements</h4>
+                <div class="d-flex mb-4">
+                    <span class="col-4"><strong>OS:</strong> @Model.Product.Requirements.OS</span>
+                    <span><strong>Required space:</strong> @Model.Product.Requirements.Storage</span>
+                </div>
+                <div class="d-flex mb-4">
+                    <div class="d-flex flex-column col-5">
+                        <h5>Minimum</h5>
+                        <div class="d-flex">
+                            <div class="details-column d-flex flex-column">
+                                <div><span>Processor:</span> @Model.Product.Requirements.MinProc</div>
+                                <div><span>Memory:</span> @Model.Product.Requirements.MinMem</div>
+                                <div><span>Graphics:</span> @Model.Product.Requirements.MinGraph</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <h5>Recommended</h5>
+                        <div class="d-flex">
+                            <div class="details-column d-flex flex-column">
+                                <div><span>Processor:</span> @Model.Product.Requirements.RecProc</div>
+                                <div><span>Memory:</span> @Model.Product.Requirements.RecMem</div>
+                                <div><span>Graphics:</span> @Model.Product.Requirements.RecGraph</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <p id="summary-text">@Model.Product.Summary</p>
         <div>
             @Model.Product.Description
         </div>
     </div>
 
     <style >
+        #details .carousel-inner {
+            height: 25rem;
+        }
+
+        #details .carousel-item {
+            height: 100%;
+            width: 100%;
+        }
+
+        #details .carousel-inner img {
+            height: 100%;
+            width: 100%;
+        }
+
+        #details .carousel-indicators {
+            position: static;
+        }
+
+        #details .carousel-indicators > li {
+            width: 3rem;
+        }
+
         #details #page-container {
             display: flex;
             flex-direction: column;
@@ -34,7 +118,7 @@
             justify-content: space-between;
         }
 
-        #details #summary-container {
+        #details #top-container {
             display: flex;
             width: 100%;
             padding-bottom: 1rem;
@@ -42,17 +126,31 @@
             border-bottom: 1px solid #D3D3D3;
         }
 
-        #details #summary-text {
+        #details #summary-container {
             display: flex;
             flex-direction: column;
             flex-basis: 60%;
-            justify-content: space-between;
-            gap: 1rem;
+        }
+
+        #details #summary-container > h4 {
+            padding-bottom: .5rem;
+            border-bottom: 1px solid lightgray;
+        }
+
+        #details .details-column > div {
+            padding-bottom: .5rem;
+        }
+
+            #details .details-column > div > span {
+                font-weight: bold;
+            }
+
+        #details .details-column.title > div {
+            font-weight: bold;
         }
 
         #details img {
             display: flex;
-            flex-basis: 40%;
         }
 
         #details #btn-container {

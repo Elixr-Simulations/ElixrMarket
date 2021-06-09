@@ -1,0 +1,129 @@
+﻿@page
+@model ElixrMarket.Web.Pages.EditorHomeModel
+@{
+}
+
+<div id="editor-home">
+    <div id="list-container">
+        <ul class="nav nav-tabs" id="submittedProductTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New Submissions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="profile" aria-selected="false">Under Review</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
+                @foreach (var product in Model.NewlySubmittedProducts)
+                {
+                    string href = $"/Details/{product.Id}";
+
+                    <div class="product-container">
+                        <input type="hidden" id="@product.Id-id" value="@product.Id" />
+                        <input type="hidden" id="@product.Id-name" value="@product.Name" />
+                        <input type="hidden" id="@product.Id-price" value="@product.Price" />
+                        <a class="info-container" href="@href">
+                            <div class="img-container">
+                                <img src="~/product-media/@product.Id/img/main.jpg" alt="Main image" />
+                            </div>
+                            <div class="name-container">
+                                <span>@product.Name</span>
+                            </div>
+                        </a>
+                        <form asp-page-handler="AssignReviewer" method="post">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <div class="btn-group" role="group">
+                                <div class="btn-group" role="group">
+                                    <select asp-for="ReviewerId" class="form-select p-2">
+                                        <option selected>Choose reviewer</option>
+                                        @foreach (var reviewer in Model.Reviewers)
+                                        {
+                                            <option value="@reviewer.Id">@reviewer.UserName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary">
+                                    <span>Assign</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                @foreach (var userProduct in Model.ProductsUnderReview)
+                {
+                    string href = $"/Details/{userProduct.Key.Product.Id}";
+
+                <div class="product-container">
+                    <a class="info-container" href="@href">
+                        <div class="img-container">
+                            <img src="~/product-media/@userProduct.Key.Product.Id/img/main.jpg" alt="Main image" />
+                        </div>
+                        <div class="name-container">
+                            <span>@userProduct.Key.Product.Name</span>
+                        </div>
+                    </a>
+                    <div class="d-flex flex-column pr-3">
+                        <span>Assigned by: @userProduct.Value</span>
+                        <span>Assigned to: @userProduct.Key.User.UserName</span>
+                    </div>
+                    <form asp-page-handler="RemoveReviewer" method="post" class="pr-3">
+                        <button class="btn btn-primary">
+                            <span>Cancel</span>
+                        </button>
+                        <input type="hidden" name="userProductId" value="@userProduct.Key.Id" />
+                    </form>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #editor-home #list-container {
+            background-color: white;
+        }
+
+        #editor-home .product-container {
+            padding: .5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #d9d9d9;
+        }
+
+            #editor-home .product-container:hover {
+                background-color: #e9e9e9;
+                cursor: pointer;
+            }
+
+        #editor-home .img-container {
+            flex-grow: 0;
+            height: 5rem;
+        }
+
+            #editor-home .img-container > img {
+                height: 100%;
+            }
+
+        #editor-home .info-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #editor-home a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .btn-group {
+            border-radius: .5rem;
+        }
+
+    </style>
+</div>

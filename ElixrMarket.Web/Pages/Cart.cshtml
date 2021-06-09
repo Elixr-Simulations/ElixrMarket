@@ -1,0 +1,72 @@
+﻿@page
+@model ElixrMarket.Web.Pages.CartModel
+@{
+}
+
+<div id="cart">
+    <div id="cart-container">
+        <h5>Your Cart</h5>
+        <br />
+        <div id="item-list"></div>
+    </div>
+    <div class="d-flex justify-content-end pt-3">
+        <a href="checkout" class="btn btn-primary text-white" align="right">Checkout</a>
+    </div>
+
+    @section Scripts {
+        <script src="~/js/display-cart.js"></script>
+        <script src="~/js/delete-cart.js"></script>
+        <script>displayCart(true)</script>
+    }
+
+    @section Styles {
+        <style>
+            #cart #cart-container {
+                border: 1px solid #B8B8B8;
+                border-radius: .5rem;
+                background-color: white;
+                padding: 2rem;
+                padding-bottom: .5rem;
+            }
+
+            #cart #item-list {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #cart .product-container {
+                padding: .5rem;
+                display: flex;
+                -webkit-align-items: center;
+                align-items: center;
+                -webkit-justify-content: flex-start;
+                justify-content: flex-start;
+                gap: 1rem;
+                width: 100%;
+                border-bottom: 1px solid #d9d9d9;
+            }
+
+            #cart .info-container {
+                flex-grow: 1;
+                display: flex;
+                gap: 1rem;
+            }
+
+                #cart .info-container img {
+                    width: 8rem;
+                }
+
+            #cart .controls-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                gap: .5rem;
+            }
+
+            #cart .delete-button {
+                font-size: .7rem;
+                padding: .1rem .5rem;
+            }
+        </style>
+    }
+</div>
