@@ -43,6 +43,7 @@
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.10.13",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "5.0.2",
           "Stripe.net": "39.52.0",
+          "tusdotnet": "2.4.0",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "5.0.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "5.0.0.0",
@@ -1030,12 +1031,12 @@
           "runtimes/win-arm/lib/net5.0/dotnet-aspnet-codegenerator-design.exe": {
             "rid": "win-arm",
             "assetType": "runtime",
-            "fileVersion": "5.0.221.10809"
+            "fileVersion": "0.0.0.0"
           },
           "runtimes/win-arm64/lib/net5.0/dotnet-aspnet-codegenerator-design.exe": {
             "rid": "win-arm64",
             "assetType": "runtime",
-            "fileVersion": "5.0.221.10809"
+            "fileVersion": "0.0.0.0"
           }
         },
         "compile": {
@@ -1639,6 +1640,17 @@
       "System.Windows.Extensions/5.0.0": {
         "dependencies": {
           "System.Drawing.Common": "5.0.0"
+        }
+      },
+      "tusdotnet/2.4.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/tusdotnet.dll": {
+            "assemblyVersion": "2.4.0.0",
+            "fileVersion": "2.4.0.0"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp3.1/tusdotnet.dll": {}
         }
       },
       "Microsoft.AspNetCore.Antiforgery/5.0.0.0": {
@@ -4046,6 +4058,13 @@
       "sha512": "sha512-c1ho9WU9ZxMZawML+ssPKZfdnrg/OjR3pe0m9v8230z3acqphwvPJqzAkH54xRYm5ntZHGG1EPP3sux9H3qSPg==",
       "path": "system.windows.extensions/5.0.0",
       "hashPath": "system.windows.extensions.5.0.0.nupkg.sha512"
+    },
+    "tusdotnet/2.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-msB6MABjqzphm1/jWoqObdSpPhII8Lfb4338tHzgBVwI8Ic1XWwXWYKbqrr7jBRXHqc1BBiuBK9bISsklDxEQg==",
+      "path": "tusdotnet/2.4.0",
+      "hashPath": "tusdotnet.2.4.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Antiforgery/5.0.0.0": {
       "type": "referenceassembly",

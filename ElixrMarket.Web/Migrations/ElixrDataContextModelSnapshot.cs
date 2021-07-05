@@ -81,6 +81,37 @@ namespace ElixrMarket.Web.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("ElixrMarket.Web.Models.Genre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Medical"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Industry"
+                        });
+                });
+
             modelBuilder.Entity("ElixrMarket.Web.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -89,6 +120,12 @@ namespace ElixrMarket.Web.Migrations
 
                     b.Property<double>("AverageReviewScore")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("BinaryPath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CarouselPath")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasMaxLength(10000)
@@ -118,6 +155,9 @@ namespace ElixrMarket.Web.Migrations
 
                     b.Property<string>("Summary")
                         .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ThumbnailPath")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Url")

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ElixrMarket.Web.Data;
+using static ElixrMarket.Web.Data.Extensions;
 using ElixrMarket.Web.Models;
 using ElixrMarket.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ElixrMarket.Web.Pages
 {
+    [Authorize(Roles = Constants.Roles.Editor)]
     public class EditorHomeModel : PageModel
     {
         [BindProperty]
@@ -43,7 +46,36 @@ namespace ElixrMarket.Web.Pages
 
         public async Task OnGetAsync()
         {
+            await GetNewlySubmittedProducts();
+            await GetProductsUnderReview();
+            await GetReviewers();
+        }
+
+        public async Task<IActionResult> OnPostAssignReviewer(int productId, string reviewerId)
+        {
+            string editorId = HttpContext.GetCurrentUserId().ToString();
+
+            var selectedProduct = await _context.Products.GetByIdAsync(productId);
+            await _editorService.AssignReviewer(selectedProduct, new Guid(reviewerId), new Guid(editorId));
+
+            return new RedirectToPageResult("/EditorHome");
+        }
+
+        public async Task<IActionResult> OnPostRemoveReviewer(int userProductId)
+        {
+            string editorId = HttpContext.GetCurrentUserId().ToString();
+            await _editorService.RemoveReviewer(userProductId);
+
+            return new RedirectToPageResult("/EditorHome");
+        }
+
+        private async Task GetNewlySubmittedProducts()
+        {
             NewlySubmittedProducts = await _context.Products.Where(p => p.Status == ProductStatus.PendingAssignment).ToListAsync();
+        }
+
+        private async Task GetProductsUnderReview()
+        {
             var reviewerships = await _context.UserProducts
                 .Include(r => r.User)
                 .Include(r => r.Product).Where(p => p.Relationship == UserProductRelationship.Reviewership).ToListAsync();
@@ -53,27 +85,11 @@ namespace ElixrMarket.Web.Pages
                 var editorship = await _context.UserProducts.Include(e => e.User).FirstOrDefaultAsync(r => r.Product.Id == reviewership.Product.Id);
                 ProductsUnderReview.Add(reviewership, editorship.User.UserName);
             }
+        }
 
+        private async Task GetReviewers()
+        {
             Reviewers = await _userManager.GetUsersInRoleAsync(Constants.Roles.Reviewer);
-        }
-
-        public async Task<IActionResult> OnPostAssignReviewer(int productId, string reviewerId)
-        {
-            string editorId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var selectedProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
-            await _editorService.AssignReviewer(selectedProduct, new Guid(reviewerId), new Guid(editorId));
-
-            return new RedirectToPageResult("/EditorHome");
-        }
-
-        public async Task<IActionResult> OnPostRemoveReviewer(int userProductId)
-        {
-            string editorId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            // TODO: add this, remove test code
-            //Guid reviewerGuid = new Guid(reviewerId);
-            await _editorService.RemoveReviewer(userProductId);
-
-            return new RedirectToPageResult("/EditorHome");
         }
     }
 }

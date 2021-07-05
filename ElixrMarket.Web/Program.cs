@@ -20,6 +20,9 @@ namespace ElixrMarket.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureKestrel(options => {
+                        options.Limits.MaxRequestBodySize = 10000000000;
+                    });
                     webBuilder.UseStartup<Startup>();
                 });
     }

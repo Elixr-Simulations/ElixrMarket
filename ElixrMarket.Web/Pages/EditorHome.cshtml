@@ -25,7 +25,7 @@
                         <input type="hidden" id="@product.Id-price" value="@product.Price" />
                         <a class="info-container" href="@href">
                             <div class="img-container">
-                                <img src="~/product-media/@product.Id/img/main.jpg" alt="Main image" />
+                                <img src="~/@product.ThumbnailPath" alt="Main image" />
                             </div>
                             <div class="name-container">
                                 <span>@product.Name</span>
@@ -59,7 +59,7 @@
                 <div class="product-container">
                     <a class="info-container" href="@href">
                         <div class="img-container">
-                            <img src="~/product-media/@userProduct.Key.Product.Id/img/main.jpg" alt="Main image" />
+                            <img src="~/@userProduct.Key.Product.ThumbnailPath" alt="Main image" />
                         </div>
                         <div class="name-container">
                             <span>@userProduct.Key.Product.Name</span>

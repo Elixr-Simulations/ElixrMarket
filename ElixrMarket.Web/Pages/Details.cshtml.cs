@@ -16,16 +16,15 @@ namespace ElixrMarket.Web.Pages
     public class DetailsModel : PageModel
     {
         // DI
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly ElixrDataContext _context;
         
-        // Model Props
         [BindProperty]
-        public string[] CarouselMedia { get; set; }
+        public string Thumb { get; set; }
         [BindProperty]
         public Product Product { get; set; }
 
-        public DetailsModel(ElixrDataContext context, IHostingEnvironment env)
+        public DetailsModel(ElixrDataContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
@@ -36,10 +35,6 @@ namespace ElixrMarket.Web.Pages
             Product = await _context.Products
                 .Include(p => p.Developer)
                 .Include(p => p.Requirements).FirstOrDefaultAsync(p => p.Id == id);
-
-            CarouselMedia = Directory.GetFiles(Path.Combine(_env.WebRootPath, $"product-files/{Product.Id}/carousel/"));
-
-            CarouselMedia = CarouselMedia.Select(file => file.Replace(_env.WebRootPath + "\\", "")).ToArray();
         }
     }
 }

@@ -5,12 +5,14 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ElixrMarket.Web.Models;
 using ElixrMarket.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace ElixrMarket.Web.Pages
 {
+    [Authorize(Roles = Constants.Roles.Customer)]
     public class LibraryModel : PageModel
     {
         [BindProperty]

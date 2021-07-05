@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\ElixrMarket.Web.csproj": {}
+    "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/ElixrMarket.Web.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\ElixrMarket.Web.csproj": {
+    "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/ElixrMarket.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\ElixrMarket.Web.csproj",
+        "projectUniqueName": "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/ElixrMarket.Web.csproj",
         "projectName": "ElixrMarket.Web",
-        "projectPath": "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\ElixrMarket.Web.csproj",
-        "packagesPath": "C:\\Users\\Chase\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\obj\\",
+        "projectPath": "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/ElixrMarket.Web.csproj",
+        "packagesPath": "/home/chase/.nuget/packages/",
+        "outputPath": "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Chase\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/home/chase/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -85,6 +79,10 @@
             "Stripe.net": {
               "target": "Package",
               "version": "[39.52.0, )"
+            },
+            "tusdotnet": {
+              "target": "Package",
+              "version": "[2.4.0, )"
             }
           },
           "imports": [
@@ -105,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.301/RuntimeIdentifierGraph.json"
         }
       }
     }

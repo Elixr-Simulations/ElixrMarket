@@ -1627,6 +1627,18 @@
             "rid": "win"
           }
         }
+      },
+      "tusdotnet/2.4.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/tusdotnet.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/tusdotnet.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -5440,6 +5452,25 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "tusdotnet/2.4.0": {
+      "sha512": "msB6MABjqzphm1/jWoqObdSpPhII8Lfb4338tHzgBVwI8Ic1XWwXWYKbqrr7jBRXHqc1BBiuBK9bISsklDxEQg==",
+      "type": "package",
+      "path": "tusdotnet/2.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/tusdotnet.dll",
+        "lib/net452/tusdotnet.xml",
+        "lib/netcoreapp3.1/tusdotnet.dll",
+        "lib/netcoreapp3.1/tusdotnet.xml",
+        "lib/netstandard1.3/tusdotnet.dll",
+        "lib/netstandard1.3/tusdotnet.xml",
+        "lib/netstandard2.0/tusdotnet.dll",
+        "lib/netstandard2.0/tusdotnet.xml",
+        "tusdotnet.2.4.0.nupkg.sha512",
+        "tusdotnet.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -5453,35 +5484,29 @@
       "Microsoft.EntityFrameworkCore.Tools >= 5.0.6",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.10.13",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 5.0.2",
-      "Stripe.net >= 39.52.0"
+      "Stripe.net >= 39.52.0",
+      "tusdotnet >= 2.4.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Chase\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "/home/chase/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\ElixrMarket.Web.csproj",
+      "projectUniqueName": "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/ElixrMarket.Web.csproj",
       "projectName": "ElixrMarket.Web",
-      "projectPath": "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\ElixrMarket.Web.csproj",
-      "packagesPath": "C:\\Users\\Chase\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Chase\\Desktop\\Work\\Elixr\\ElixrMarket\\ElixrMarket.Web\\obj\\",
+      "projectPath": "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/ElixrMarket.Web.csproj",
+      "packagesPath": "/home/chase/.nuget/packages/",
+      "outputPath": "/home/chase/elixr/ElixrMarket/ElixrMarket.Web/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Chase\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "/home/chase/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5541,6 +5566,10 @@
           "Stripe.net": {
             "target": "Package",
             "version": "[39.52.0, )"
+          },
+          "tusdotnet": {
+            "target": "Package",
+            "version": "[2.4.0, )"
           }
         },
         "imports": [
@@ -5561,7 +5590,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.301/RuntimeIdentifierGraph.json"
       }
     }
   }

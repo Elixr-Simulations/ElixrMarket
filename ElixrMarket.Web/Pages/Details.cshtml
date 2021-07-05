@@ -5,17 +5,31 @@
     <div id="page-container">
         <div class="d-flex justify-content-between">
             <h2>@Model.Product.Name</h2>
-            <button class="btn btn-primary w-25"><span style="font-size: 1.5rem;">$@Model.Product.Price - </span><i style="font-size: 1.5rem;" class="fas fa-cart-plus"></i></button>
+            @if (
+                Model.Product.Status == Models.ProductStatus.Bronze ||
+                Model.Product.Status == Models.ProductStatus.Silver ||
+                Model.Product.Status == Models.ProductStatus.Gold)
+            {
+                <button class="btn btn-primary w-25"><span style="font-size: 1.5rem;">$@Model.Product.Price - </span><i style="font-size: 1.5rem;" class="fas fa-cart-plus"></i></button>   
+            }
+            else {
+                <h5>Pending Release</h5>
+            }
         </div>
         <div id="top-container">
+            @if (!string.IsNullOrEmpty(Model.Product.CarouselPath))
+            {
             <div id="media-carousel" class="w-50 carousel slide" data-ride="carousel" align="center">
                 <!-- slides -->
+                @{
+                    string[] carouselPaths = Model.Product.CarouselPath.Split(',');
+                }
                 <div class="carousel-inner">
-                    <div class="carousel-item active"> <img src="~/@Model.CarouselMedia[0]" alt="@Model.Product.Name"> </div>
-                    @for (int i = 1; i < Model.CarouselMedia.Length; i++)
+                    <div class="carousel-item active"> <img src="~/@carouselPaths[0]" alt="@Model.Product.Name"> </div>
+                    @for (int i = 1; i < carouselPaths.Length; i++)
                     {
-                        <div class="carousel-item"> <img src="~/@Model.CarouselMedia[i]" alt="@Model.Product.Name"> </div>
-                    }
+                        <div class="carousel-item"> <img src="~/@carouselPaths[i]" alt="@Model.Product.Name"> </div>
+                    } 
                 </div>
                 <!-- Left right -->
                 <a class="carousel-control-prev" href="#media-carousel" data-slide="prev">
@@ -26,13 +40,18 @@
                 </a>
                 <!-- Thumbnails -->
                 <ol class="carousel-indicators list-inline">
-                    <li class="list-inline-item active"> <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#media-carousel"> <img src="~/@Model.CarouselMedia[0]" class="img-fluid"> </a> </li>
-                    @for (int i = 1; i < Model.CarouselMedia.Length; i++)
-                    {
-                        <li class="list-inline-item"> <a id="carousel-selector-@i"  data-slide-to="@i" data-target="#media-carousel"> <img src="~/@Model.CarouselMedia[i]" class="img-fluid"> </a> </li>
-                    }
+                    <li class="list-inline-item active"> <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#media-carousel"> <img src="~/@carouselPaths[0]" class="img-fluid"> </a> </li>
+                        @for (int i = 1; i < carouselPaths.Length; i++)
+                        {
+                            Console.WriteLine(i);
+                            <li class="list-inline-item"> <a id="carousel-selector-@i"  data-slide-to="@i" data-target="#media-carousel"> <img src="~/@carouselPaths[i]" class="img-fluid"> </a> </li>
+                        }   
                 </ol>
             </div>
+            }
+            else {
+                <div>No carousel content</div>
+            }
             <div id=summary-container>
                 <h4>Details</h4>
                 <div class="d-flex mb-4">
@@ -43,37 +62,49 @@
                     </div>
                     <div class="details-column">
                         <div>@Model.Product.Name</div>
-                        <div>@Model.Product.ReleaseDate</div>
-                        <div>@Model.Product.Developer.UserName</div>
+                        @if (Model.Product.ReleaseDate == DateTime.MinValue)
+                        {
+                            <div>Pending</div>    
+                        }
+                        else {
+                            <div>@Model.Product.ReleaseDate</div>
+                        }
+                        @if (Model.Product.Developer != null)
+                        {
+                            <div>@Model.Product.Developer.UserName</div>   
+                        }
                     </div>
                 </div>
-                <h4>Requirements</h4>
-                <div class="d-flex mb-4">
-                    <span class="col-4"><strong>OS:</strong> @Model.Product.Requirements.OS</span>
-                    <span><strong>Required space:</strong> @Model.Product.Requirements.Storage</span>
-                </div>
-                <div class="d-flex mb-4">
-                    <div class="d-flex flex-column col-5">
-                        <h5>Minimum</h5>
-                        <div class="d-flex">
-                            <div class="details-column d-flex flex-column">
-                                <div><span>Processor:</span> @Model.Product.Requirements.MinProc</div>
-                                <div><span>Memory:</span> @Model.Product.Requirements.MinMem</div>
-                                <div><span>Graphics:</span> @Model.Product.Requirements.MinGraph</div>
+                @if (Model.Product.Requirements != null)
+                {
+                    <h4>Requirements</h4>
+                    <div class="d-flex mb-4">
+                        <span class="col-4"><strong>OS:</strong> @Model.Product.Requirements.OS</span>
+                        <span><strong>Required space:</strong> @Model.Product.Requirements.Storage</span>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="d-flex flex-column col-5">
+                            <h5>Minimum</h5>
+                            <div class="d-flex">
+                                <div class="details-column d-flex flex-column">
+                                    <div><span>Processor:</span> @Model.Product.Requirements.MinProc</div>
+                                    <div><span>Memory:</span> @Model.Product.Requirements.MinMem</div>
+                                    <div><span>Graphics:</span> @Model.Product.Requirements.MinGraph</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <h5>Recommended</h5>
-                        <div class="d-flex">
-                            <div class="details-column d-flex flex-column">
-                                <div><span>Processor:</span> @Model.Product.Requirements.RecProc</div>
-                                <div><span>Memory:</span> @Model.Product.Requirements.RecMem</div>
-                                <div><span>Graphics:</span> @Model.Product.Requirements.RecGraph</div>
+                        <div class="d-flex flex-column">
+                            <h5>Recommended</h5>
+                            <div class="d-flex">
+                                <div class="details-column d-flex flex-column">
+                                    <div><span>Processor:</span> @Model.Product.Requirements.RecProc</div>
+                                    <div><span>Memory:</span> @Model.Product.Requirements.RecMem</div>
+                                    <div><span>Graphics:</span> @Model.Product.Requirements.RecGraph</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </div>   
+                }
             </div>
         </div>
         <p id="summary-text">@Model.Product.Summary</p>

@@ -1,8 +1,10 @@
 ﻿const notifyEmptyCart = () => {
     noProductText = document.createElement('SPAN');
     noProductText.innerText = "You have no items in your cart";
+    noProductText.classList.add('mb-3');
+    console.log('test')
     document.getElementById('item-list').appendChild(noProductText);
-    document.getElementById('cart-container').removeChild(document.getElementById('subtotal'));
+    //document.getElementById('cart-container').removeChild(document.getElementById('subtotal'));
 }
 
 const calculateTotal = (productList) => {
@@ -73,9 +75,7 @@ const displayCart = (addRemoveButton) => {
     let cartDisplay = document.getElementById('item-list');
 
     if (currentCart['products'].length == 0) {
-        noProductText = document.createElement('SPAN');
-        noProductText.innerText = "You have no items in your cart";
-        document.getElementById('item-list').appendChild(noProductText);
+        notifyEmptyCart();
         return;
     }
 

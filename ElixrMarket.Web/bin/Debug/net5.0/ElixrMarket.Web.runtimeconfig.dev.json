@@ -1,9 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\Chase\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Chase\\.nuget\\packages",
-      "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
+      "/home/chase/.dotnet/store/|arch|/|tfm|",
+      "/home/chase/.nuget/packages"
     ]
   }
 }

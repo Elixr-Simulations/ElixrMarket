@@ -32,7 +32,7 @@
             <input type="hidden" id="@product.Id-name" value="@product.Name" />
             <div class="product-container" >
                 <a class="img-container" href="@href">
-                    <img src="~/product-files/@product.Id/thumb.jpg" alt="Main image" />
+                    <img src="~/@product.ThumbnailPath" alt="Thumbnail" />   
                 </a>
                 <div class="text-container">
                     <a class="detail-link" href="@href">@product.Name - $@product.Price</a>

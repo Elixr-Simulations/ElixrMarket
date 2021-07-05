@@ -6,6 +6,7 @@ namespace ElixrMarket.Web.Models
 {
     public enum ProductStatus
     {
+        PendingConfirmation,
         PendingAssignment,
         UnderReview,
         Bronze,
@@ -36,5 +37,8 @@ namespace ElixrMarket.Web.Models
         public ICollection<UserProduct> Users { get; set; }
         public ProductStatus Status { get; set; }
         public string Url { get; set; }
+        public string ThumbnailPath {get; set;}
+        public string CarouselPath {get; set;}
+        public string BinaryPath {get; set;}
     }
 }
