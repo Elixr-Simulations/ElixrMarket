@@ -10,11 +10,11 @@ WORKDIR /src
 COPY ["ElixrMarket.Web/ElixrMarket.Web.csproj", "ElixrMarket.Web/"]
 RUN dotnet restore "ElixrMarket.Web/ElixrMarket.Web.csproj"
 COPY . .
-WORKDIR "/src/ElixrMarket.Web"
+WORKDIR /src/ElixrMarket.Web
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
-RUN mkdir -p /app/data
-RUN touch /app/data/elixr.db
+WORKDIR /app/data
+WORKDIR /src/ElixrMarket.Web
 RUN dotnet ef database update -- --environment Production
 RUN dotnet build "ElixrMarket.Web.csproj" -c Release -o /app/build
 
