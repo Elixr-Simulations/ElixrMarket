@@ -1,6 +1,7 @@
 version: "3.9"
 services: 
-    elixrmarket: cdmoss/elixrmarket
+    elixrmarket: 
+    image: cdmoss/elixrmarket
     volumes: 
         - data:/app/data/
 volumes: 
