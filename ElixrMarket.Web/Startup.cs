@@ -78,6 +78,8 @@ namespace ElixrMarket.Web
         {
             Environment = env;
 
+            dbContext.Database.EnsureCreated();
+
             var seeder = services.GetRequiredService<DbSeeder>();
 
             // seed roles
