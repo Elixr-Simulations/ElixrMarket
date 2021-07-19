@@ -13,8 +13,8 @@ COPY . .
 WORKDIR "/src/ElixrMarket.Web"
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
-RUN mkdir ../app/data
-RUN touch ../app/data/elixr.db
+RUN mkdir /app/data
+RUN touch /app/data/elixr.db
 RUN dotnet ef database update -- --environment Production
 RUN dotnet build "ElixrMarket.Web.csproj" -c Release -o /app/build
 
