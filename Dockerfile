@@ -15,7 +15,8 @@ RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 WORKDIR /app/data
 WORKDIR /src/ElixrMarket.Web
-RUN dotnet ef database update -- --environment Production
+RUN dotnet ef database update 
+RUN ls /app/data
 RUN dotnet build "ElixrMarket.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
