@@ -5,8 +5,10 @@ namespace ElixrMarket.Web.Models
     public enum UserProductRelationship
     {
         Ownership,
-        Reviewership,
-        Editorship
+        ContentReviewership,
+        Editorship,
+        TechnicalReviewership,
+        Inactive
     }
 
     /// <summary>
@@ -20,5 +22,6 @@ namespace ElixrMarket.Web.Models
         public int ProductId { get; set; }
         public Product Product { get; set; }
         public UserProductRelationship Relationship { get; set; }
+        public bool Active { get; set; }
     }
 }

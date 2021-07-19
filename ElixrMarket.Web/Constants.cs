@@ -17,7 +17,8 @@ namespace ElixrMarket.Web
             public const string Customer = "Customer";
             public const string Developer = "Developer";
             public const string Editor = "Editor";
-            public const string Reviewer = "Reviewer";
+            public const string ContentReviewer = "ContentReviewer";
+            public const string TechnicalReviewer = "TechnicalReviewer";
             public const string Admin = "Admin";
         }
     }

@@ -6,9 +6,11 @@ namespace ElixrMarket.Web.Models
 {
     public enum ProductStatus
     {
-        PendingConfirmation,
-        PendingAssignment,
-        UnderReview,
+        PendingFinalEval,
+        PendingTechnicalAssignment,
+        UnderTechnicalReview,
+        PendingContentAssignment,
+        UnderContentReview,
         Bronze,
         Silver,
         Gold

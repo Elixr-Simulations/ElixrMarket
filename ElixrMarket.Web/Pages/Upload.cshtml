@@ -52,6 +52,20 @@
                 <input class="form-control" type="text" placeholder="Memory" id="max-ram" />
             </div>
         </div>
+        <h5 class="title">Credentials</h5>
+        <div>
+            <p>Are there any data or publications relevant to your app?</p>
+            <input type="radio" id="pub-yes" name="pub-toggle" value="true" onchange="togglePublications()" checked type="radio" />
+            <label>Yes</label>
+            <input type="radio" id="pub-no" name="pub-toggle" value="false" onchange="togglePublications()" type="radio" />
+            <label>No</label>
+            <div class="mb-2" id="pub-container">
+                <div id="pub-list">
+                    <input class="form-control mb-1" type="text" placeholder="Link to publication"/>
+                </div>
+                <button onclick="addPublication()" class="btn btn-light"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
         <h5 class="title">Media</h5>
         <div>
             <label >Select carousel media:</label>
@@ -63,16 +77,23 @@
         </div>
         <h5 class="title">Application access</h5>
         <div>
+            <p>Uploading binary file?</p>
             <div class="mb-2">
-                <input onchange="toggleBinUpload()" id="bin-toggle" checked type="checkbox" />
-                <span>Uploading binary file?</span>
+                <input type="radio" id="bin-yes" name="bin-toggle" value="true" onchange="toggleBinUpload(true)" checked type="radio" />
+                <label>Yes</label>
+                <input type="radio" id="bin-no" name="bin-toggle" value="false" onchange="toggleBinUpload(false)" type="radio" />
+                <label>No</label>
             </div>
             <div id="bin-uploader">
                 <label>Select installer file:</label>
                 <input id="bin-file" type="file" />
             </div>
+            <div id="app-link">
+                <label>Link to app</label>
+                <input id="bin-file" class="form-control" type="text" />
+            </div>
         </div>
-        <button class="btn btn-success mt-3" id="submit" type="submit">Submit</button>
+        <button class="btn btn-main mt-3" id="submit" type="submit">Submit</button>
     </div>
     <div id="upload-progress-container" >
         <h5 id="status">Uploading submission: <span id="upload-percentage"></span></h5>
@@ -89,6 +110,9 @@
             flex-direction: column;
             justify-content: center;
             gap: 1rem;
+            background-color: white;
+            padding: 1.5rem;
+            box-shadow: 0 0 2px .5px #B8B8B8; 
         }
 
         #upload #reqs {
@@ -109,6 +133,20 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+
+        #upload #pub-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #upload #pub-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #upload #pub-list > button {
+            align-self: flex-end;
         }
 
         #upload .title {
@@ -134,19 +172,63 @@
     <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js" crossorigin="anonymous" ></script>
     <script src="~/lib/loading-bar/loading-bar.min.js" ></script>
     <script>
-        const toggleBinUpload = () => {
-            const binToggler = document.getElementById('bin-toggle');
+        const toggleBinUpload = (isToggled) => {
             const binUploader = document.getElementById('bin-uploader');
+            const appLink = document.getElementById('app-link');
             
-            binUploader.disabled = !binToggler.checked
+            binUploader.disabled = !isToggled
+            appLink.disabled = isToggled
 
-            if (binToggler.checked) {
+            if (isToggled) {
                 binUploader.style.display = "block";
+                appLink.style.display = "none";
             }
             else {
                 binUploader.style.display = "none";
+                appLink.style.display = "block";
             }
         };
+
+        toggleBinUpload(true);
+
+        const togglePublications = () => {
+            if (document.getElementById('pub-yes').checked) {
+                document.getElementById('pub-container').style.display = 'flex';
+            }
+            else {
+                document.getElementById('pub-container').style.display = 'none';
+            }
+        }
+
+        togglePublications();
+
+        const addPublication = () => {
+            pubList = document.getElementById('pub-list');
+
+            let newPub = document.createElement('DIV');
+            newPub.classList.add('d-flex', 'mb-1');
+
+            let pubLink = document.createElement('INPUT');
+            pubLink.classList.add('form-control');
+            pubLink.placeholder = "Link to publication";
+            pubLink.type = 'text';
+            
+            let pubRemove = document.createElement('BUTTON');
+            pubRemove.classList.add('btn', 'btn-main');
+            pubRemove.innerHTML = '<i class="fas fa-trash"></i>'
+
+            pubRemove.onclick = () => {
+                pubList.removeChild(newPub);
+            }
+
+            newPub.appendChild(pubLink);
+            newPub.appendChild(pubRemove);
+
+            
+            pubList.appendChild(newPub, pubList.lastChild);
+        }
+
+
     
         document.getElementById('submit').onclick = async () => {
             document.getElementById('form-container').style.display = "none";
@@ -183,6 +265,14 @@
                 formData.append('carouselMedia', carouselMedia[i]);    
             }
 
+            if (document.getElementById('bin-no').checked) {
+                formData.append('appLink', document.getElementById('bin-no').value);    
+                
+            }
+            else {
+                formData.append('appLink', "");    
+            }
+
             const resp = await axios({
                 method: 'post',
                 url: '/Upload',
@@ -210,7 +300,7 @@
                 console.log(productCreated)
             };
 
-            if (document.getElementById('bin-toggle').checked) {
+            if (document.getElementById('bin-yes').checked) {
                 let percentage;
                 const binFile = document.getElementById('bin-file').files[0];
                 const upload = new tus.Upload(binFile, {
@@ -262,8 +352,7 @@
                 productBtn.href = '/Details/' + productId + "/";
 
                 document.getElementById('progress').style.display = 'none';
-            }
-            
+            }  
         };
     </script>
 }

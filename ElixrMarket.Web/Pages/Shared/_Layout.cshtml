@@ -15,6 +15,9 @@
     @* <script src="https://js.stripe.com/v3/"></script> *@
     <link rel="stylesheet" href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.min.css" />
     <script src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet"> 
     @RenderSection("Styles", required: false)
     <style>
     </style>
@@ -23,7 +26,10 @@
     <header>
         <nav id="main-nav" class="navbar navbar-expand-sm navbar-light border-bottom  mb-3">
             <div class="container">
-                <a class="navbar-brand mr-5" asp-area="" asp-page="/Index">Elixr Marketplace</a>
+                <a href="/index" id="brand-title">
+                    <img style="height: 6rem;" src="~/img/logo.png" alt="Elixr Marketplace" />
+                    <span class="ml-5">Marketplace</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

@@ -10,7 +10,7 @@
             {
                 <a class="nav-link" asp-page="editorhome">Dashboard</a>   
             }
-            @if (User.IsInRole(Constants.Roles.Reviewer))
+            @if (User.IsInRole(Constants.Roles.ContentReviewer))
             {
                 <a class="nav-link" asp-page="reviewerhome">Dashboard</a>   
             }
@@ -26,10 +26,10 @@
         {
             <li class="nav-item">
                 <div class="dropdown">
-                    <div class="nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="nav-link dropdown-toggle" type="button" id="account-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Hello @User.Identity.Name
                     </div>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-menu" id="account-menu" aria-labelledby="dropdownMenuButton">
                         @if (User.IsInRole(Constants.Roles.Customer))
                         {
                             <a class="dropdown-item" asp-page="Library">Library</a>   
@@ -50,12 +50,12 @@
         {
         <li class="nav-item">
             <div class="dropdown">
-                <div class="nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div onclick="toggleBorder()" class="nav-link dropdown-toggle" type="button" id="account-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Login/Sign up
                 </div>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu" id="account-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" asp-area="identity" asp-page="/account/login">Login</a>
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/register" title="Manage">Signup</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/register" title="Manage">Sign up</a>
                 </div>
             </div>
         </li>
@@ -73,29 +73,45 @@
             </li>
         }
     </ul>
-
     <style>
         #nav .navbar-nav > li {
             padding-left: 1rem;
             padding-right: 1rem;
         }
 
-            #nav .navbar-nav > li > a.current {
-                border-bottom: 1px solid white;
+        #nav .nav-link {
+            font-size: 1.2rem;
+            border-bottom: 1.5px solid white;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            transition: border-bottom 0.2s linear;
+        }
+
+        #nav .nav-link:hover {
+            border-bottom: 1.5px solid var(--primary-color);
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+            #nav .nav-link.current {
+                border-bottom: 1.5px solid black;
             }
 
-                #nav .navbar-nav > li > a.current:hover {
-                    border-bottom: 1px solid white;
-                    border-bottom: 1px solid #67C50A;
+                #nav .nav-link.current:hover {
+                    border-bottom: 1.5px solid var(--primary-color);
                 }
 
         #nav .nav-link {
-            color: white !important;
+            color: black !important;
             padding-bottom: .2rem;
         }
 
             #nav .nav-link:hover {
-                color: #67C50A !important;
+                color: var(--primary-color) !important;
             }
+
+    #nav .border {
+        border: 1px solid rgba(0,0,0,.15);
+    }
     </style>
 </div>

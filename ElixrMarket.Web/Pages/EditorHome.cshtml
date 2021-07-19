@@ -1,100 +1,348 @@
 ﻿@page
 @model ElixrMarket.Web.Pages.EditorHomeModel
+@namespace Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiForgery
 @{
+    var afToken = antiForgery.GetAndStoreTokens(HttpContext).RequestToken;
 }
 
 <div id="editor-home">
     <div id="list-container">
+        <div id="btn-save">
+            <button onclick="saveChanges()" class="btn-main btn">Save Changes</button>
+        </div>
         <ul class="nav nav-tabs" id="submittedProductTabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New Submissions</a>
+                <a class="nav-link active" id="new-tab" onclick="toggleSaveBtn(true)" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New submissions</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="profile" aria-selected="false">Under Review</a>
+                <a class="nav-link" onclick="toggleSaveBtn(false)" id="pending-tech-tab" data-toggle="tab" href="#pending-tech" role="tab" aria-controls="profile" aria-selected="false">Under technical review</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="toggleSaveBtn(true)" id="awaiting-content-tab" data-toggle="tab" href="#awaiting-content" role="tab" aria-controls="profile" aria-selected="false">Awaiting content review</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="toggleSaveBtn(false)" id="pending-content-tab" data-toggle="tab" href="#pending-content" role="tab" aria-controls="profile" aria-selected="false">Under content review</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="toggleSaveBtn(false)" id="final-tab" data-toggle="tab" href="#final" role="tab" aria-controls="profile" aria-selected="false">Awaiting final evaluation</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
-                @foreach (var product in Model.NewlySubmittedProducts)
+                @if (Model.NewlySubmittedProducts.Count > 0)
                 {
-                    string href = $"/Details/{product.Id}";
+                    @foreach (var product in Model.NewlySubmittedProducts)
+                    {
+                        string href = $"/Details/{product.Id}";
 
-                    <div class="product-container">
-                        <input type="hidden" id="@product.Id-id" value="@product.Id" />
-                        <input type="hidden" id="@product.Id-name" value="@product.Name" />
-                        <input type="hidden" id="@product.Id-price" value="@product.Price" />
-                        <a class="info-container" href="@href">
-                            <div class="img-container">
-                                <img src="~/@product.ThumbnailPath" alt="Main image" />
-                            </div>
-                            <div class="name-container">
-                                <span>@product.Name</span>
-                            </div>
-                        </a>
-                        <form asp-page-handler="AssignReviewer" method="post">
+                        <div class="product-container">
+                            <input type="hidden" id="@product.Id-id" value="@product.Id" />
+                            <input type="hidden" id="@product.Id-name" value="@product.Name" />
+                            <input type="hidden" id="@product.Id-price" value="@product.Price" />
+                            <a class="info-container" href="@href">
+                                <div class="img-container">
+                                    <img src="~/@product.ThumbnailPath" alt="Main image" />
+                                </div>
+                                <div class="name-container">
+                                    <span>@product.Name</span>
+                                </div>
+                            </a>
                             <input type="hidden" name="productId" value="@product.Id" />
                             <div class="btn-group" role="group">
-                                <div class="btn-group" role="group">
-                                    <select asp-for="ReviewerId" class="form-select p-2">
-                                        <option selected>Choose reviewer</option>
-                                        @foreach (var reviewer in Model.Reviewers)
-                                        {
-                                            <option value="@reviewer.Id">@reviewer.UserName</option>
-                                        }
-                                    </select>
-                                </div>
-                                <button class="btn btn-primary">
-                                    <span>Assign</span>
-                                </button>
+                            
+                                <select class="tech-reviewers" id="@product.Id-tech-reviewers" asp-for="ReviewerId" multiple>
+                                    @foreach (var reviewer in Model.TechnicalReviewers)
+                                    {
+                                        <option value="@reviewer.Id">@reviewer.UserName</option>
+                                    }
+                                </select>
+                                <button type="button" data-toggle="modal" data-target="#reject-modal" class="btn btn-main">Reject</button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    }   
+                }
+                else
+                {
+                    <p class="p-4" align="center">There are no new product submissions.</p>       
                 }
             </div>
-            <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                @foreach (var userProduct in Model.ProductsUnderReview)
+            <div class="tab-pane fade" id="pending-tech" role="tabpanel" aria-labelledby="pending-tab">
+                @if (Model.ProductsUnderTechnicalReview.Count > 0)
                 {
-                    string href = $"/Details/{userProduct.Key.Product.Id}";
+                    @foreach (var product in Model.ProductsUnderTechnicalReview)
+                    {
+                        string href = $"/Details/{product.Key.Id}";
 
-                <div class="product-container">
-                    <a class="info-container" href="@href">
-                        <div class="img-container">
-                            <img src="~/@userProduct.Key.Product.ThumbnailPath" alt="Main image" />
+                    <div class="product-container">
+                        <a class="info-container" href="@href">
+                            <div class="img-container">
+                                <img src="~/@product.Key.ThumbnailPath" alt="Main image" />
+                            </div>
+                            <div class="name-container">
+                                <span>@product.Key.Name</span>
+                            </div>
+                        </a>
+                        <div id="assignments" class="d-flex flex-column">
+                            <span id="assigned-by">Assigned by: @product.Value.Item1</span>
+                            <span class="mb-2">Assigned to:</span>
+                            <div>
+                                @foreach (var reviewer in @product.Value.Item2)
+                                {
+                                    <a align="center" href="mailto:@reviewer.Email" id="@product.Key.Id-@reviewer.UserName" class="reviewer">@reviewer.UserName</a>
+                                }
+                            </div>
                         </div>
-                        <div class="name-container">
-                            <span>@userProduct.Key.Product.Name</span>
-                        </div>
-                    </a>
-                    <div class="d-flex flex-column pr-3">
-                        <span>Assigned by: @userProduct.Value</span>
-                        <span>Assigned to: @userProduct.Key.User.UserName</span>
                     </div>
-                    <form asp-page-handler="RemoveReviewer" method="post" class="pr-3">
-                        <button class="btn btn-primary">
-                            <span>Cancel</span>
-                        </button>
-                        <input type="hidden" name="userProductId" value="@userProduct.Key.Id" />
-                    </form>
-                </div>
+                    }   
+                }
+                else
+                {
+                    <p class="p-4" align="center">No products are currently under technical review.</p>
+                }
+            </div>
+            <div class="tab-pane fade show" id="awaiting-content" role="tabpanel" aria-labelledby="new-tab">
+                @if (Model.ProductsAwaitingContentReview.Count > 0)
+                {
+                    @foreach (var product in Model.ProductsAwaitingContentReview)
+                    {
+                        string href = $"/Details/{product.Id}";
+
+                        <div class="product-container">
+                            <input type="hidden" id="@product.Id-id" value="@product.Id" />
+                            <input type="hidden" id="@product.Id-name" value="@product.Name" />
+                            <input type="hidden" id="@product.Id-price" value="@product.Price" />
+                            <a class="info-container" href="@href">
+                                <div class="img-container">
+                                    <img src="~/@product.ThumbnailPath" alt="Main image" />
+                                </div>
+                                <div class="name-container">
+                                    <span>@product.Name</span>
+                                </div>
+                            </a>
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <div class="btn-group" role="group">
+                            
+                                <select class="content-reviewers" id="@product.Id-content-reviewers" asp-for="ReviewerId" multiple>
+                                    @foreach (var reviewer in Model.ContentReviewers)
+                                    {
+                                        <option value="@reviewer.Id">@reviewer.UserName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }   
+                }
+                else
+                {
+                    <p class="p-4" align="center">There are no products awaiting content review.</p>       
+                }
+            </div>
+            <div class="tab-pane fade show" id="pending-content" role="tabpanel" aria-labelledby="new-tab">
+                @if (Model.ProductsUnderContentReview.Count > 0)
+                {
+                    @foreach (var product in Model.ProductsUnderContentReview)
+                    {
+                        string href = $"/Details/{product.Key.Id}";
+
+                    <div class="product-container">
+                        <a class="info-container" href="@href">
+                            <div class="img-container">
+                                <img src="~/@product.Key.ThumbnailPath" alt="Main image" />
+                            </div>
+                            <div class="name-container">
+                                <span>@product.Key.Name</span>
+                            </div>
+                        </a>
+                        <div id="assignments" class="d-flex flex-column">
+                            <span id="assigned-by">Assigned by: @product.Value.Item1</span>
+                            <span class="mb-2">Assigned to:</span>
+                            <div>
+                                @foreach (var reviewer in @product.Value.Item2)
+                                {
+                                    <a align="center" href="mailto:@reviewer.Email" id="@product.Key.Id-@reviewer.UserName" class="reviewer">@reviewer.UserName</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    }   
+                }
+                else
+                {
+                    <p class="p-4" align="center">No products are currently under content review.</p>
+                }
+            </div>
+            <div class="tab-pane fade show" id="final" role="tabpanel" aria-labelledby="new-tab">
+                @if (Model.ProductsAwaitingFinalEval.Count > 0)
+                {
+                    @foreach (var product in Model.ProductsAwaitingFinalEval)
+                    {
+                        string href = $"/Details/{product.Id}";
+
+                        <div class="product-container">
+                            <a class="info-container" href="@href">
+                                <div class="img-container">
+                                    <img src="~/@product.ThumbnailPath" alt="Main image" />
+                                </div>
+                                <div class="name-container">
+                                    <span>@product.Name</span>
+                                </div>
+                            </a>
+                            <form method="post" class="btn-group" role="group">
+                                <button asp-page-handler="Pass" asp-route-id="@product.Id" class="btn btn-success">Approve</button>
+                                <button asp-page-handler="Fail" asp-route-id="@product.Id" class="btn btn-danger">Reject</button>
+                                @* <a href="@product.BinaryPath" class="btn btn-secondary">Begin review</a> *@
+                            </form>
+                        </div>
+                    }   
+                }
+                else
+                {
+                    <p class="p-4" align="center">No products are currently awaiting final evaluation.</p>
                 }
             </div>
         </div>
     </div>
+    <div class="modal fade" id="reject-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Provide rejection feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea class="w-100 form-control" placeholder="Feedback" multiline></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-main">Send</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    </div>
+    @section Scripts {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+        let technicalReviewerChanges = {};
+        let contentReviewerChanges = {};
+         $(document).ready(function () {
+            // configure multiselects
+            const technicalReviewerSelects = document.getElementsByClassName('tech-reviewers');
+            const contentReviewerSelects = document.getElementsByClassName('content-reviewers');
+            for (let i = 0; i < technicalReviewerSelects.length; i++) {
+                addSelectChoicesToInMemoryObject(technicalReviewerSelects[i], technicalReviewerChanges)
+            };
+            for (let i = 0; i < contentReviewerSelects.length; i++) {
+                addSelectChoicesToInMemoryObject(contentReviewerSelects[i], contentReviewerChanges)
+            };
+
+            // add contact button listeners 
+            let reviewers = document.getElementsByClassName('reviewer');
+            let reviewerElementDict = {};
+            for (let i = 0; i < reviewers.length; i++) {
+                reviewerElementDict[reviewers[i].id] = reviewers[i].innerText;
+
+                reviewers[i].addEventListener('mouseenter', (e) => {
+                    e.target.innerText = 'Contact by email';
+                    e.target.classList.add('display-contact');
+                })
+                reviewers[i].addEventListener('mouseleave', (e) => {
+                    e.target.innerText = reviewerElementDict[e.target.id];
+                    e.target.classList.remove('display-contact');
+                })
+            }
+
+            console.log(reviewerElementDict);
+        });
+
+        // configures the bootstrap-multiselect options for a select element,
+        // and adds an onChange listener which puts the choice into an in-memory object which will be sent to the backend for db storage when save changes is pressed
+        const addSelectChoicesToInMemoryObject = (multiSelect, inMemoryObject) => {
+            $('#'+multiSelect.id).multiselect({
+                includeSelectAllOption: true,
+                nonSelectedText: 'Choose a reviewer',
+                onChange: (element, checked) => {
+                    const productId = multiSelect.id[0];
+                    const reviewerId = element[0].value;
+                    if (checked == true) {
+                        if (productId in inMemoryObject) {
+                            // add to existing list
+                            const currentReviewers = inMemoryObject[productId];
+                            inMemoryObject[productId] = [...currentReviewers, reviewerId]
+                        }
+                        else {
+                            inMemoryObject[productId] = [reviewerId]
+                        }
+                    }
+                    else {
+                        inMemoryObject[productId] = inMemoryObject.productId.filter(reviewer => reviewer !== reviewerId)
+                    };
+
+                    console.log(inMemoryObject);
+                }
+            })
+        }
+
+        const saveChanges = async () => {
+            const selects = document.getElementsByTagName('SELECT');
+            let technicalReviewers = [];
+            let contentReviewers = [];
+            Object.keys(technicalReviewerChanges).forEach(productId => technicalReviewers.push(productId + ":" + technicalReviewerChanges[productId].join()));
+            Object.keys(contentReviewerChanges).forEach(productId => contentReviewers.push(productId + ":" + contentReviewerChanges[productId].join()));
+            let changes = new FormData();
+            changes.append('technicalReviewerData', technicalReviewers.join(';'));
+            changes.append('contentReviewerData', contentReviewers.join(';'));
+
+            if (technicalReviewers.length + contentReviewers.length > 0) {
+                try {
+                const response = await axios({
+                    method: 'post',
+                    url: '/EditorHome',
+                    data: changes,
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'RequestVerificationToken': '@afToken'
+                    }
+                })
+                location.reload();
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+
+        const toggleSaveBtn = (show) => {
+            if (show) {
+                document.getElementById('btn-save').style.display = 'block';
+            }
+            else {
+                document.getElementById('btn-save').style.display = 'none';
+            }
+        }
+    </script>
+    }
     <style>
         #editor-home #list-container {
             background-color: white;
+            box-shadow: 0 0 2px .5px #B8B8B8; 
         }
 
         #editor-home .product-container {
-            padding: .5rem;
+            padding: 1rem;
             display: flex;
             align-items: center;
             gap: 1rem;
             border-bottom: 1px solid #d9d9d9;
+            width: 100%;
         }
 
-            #editor-home .product-container:hover {
+            #editor-home .info-container:hover {
                 background-color: #e9e9e9;
                 cursor: pointer;
             }
@@ -108,6 +356,12 @@
                 height: 100%;
             }
 
+        #editor-home #assigned-by {
+            border-bottom: 1px solid #d9d9d9;
+            padding-bottom: .3rem;
+            margin-bottom: .7rem;
+        }
+
         #editor-home .info-container {
             flex-grow: 1;
             display: flex;
@@ -116,13 +370,54 @@
             gap: 1rem;
         }
 
+        #editor-home #assignments {
+            border-left: 1px solid #d9d9d9;
+            padding-left: 2rem;
+        }
+
         #editor-home a {
             text-decoration: none;
             color: black;
         }
 
-        .btn-group {
+        #editor-home #contact-container {
+            width: 5rem;
+        }
+
+        #editor-home .btn-group {
             border-radius: .5rem;
+        }
+
+        #editor-home #btn-save {
+            height: 4rem;
+            float: right;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        #editor-home select {
+            border: none;
+            outline: none;
+        }
+
+        #editor-home .nav-link {
+            display: flex;
+            align-items: center;
+            border-radius: 0;
+            height: 4rem;
+        }
+
+        #editor-home .reviewer {
+            text-align: center;
+            list-style-type: none;
+            padding: .3rem;
+            display: block;
+        }
+
+        #editor-home .display-contact {
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
         }
 
     </style>

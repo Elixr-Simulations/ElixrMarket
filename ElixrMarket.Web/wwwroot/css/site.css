@@ -1,16 +1,36 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+@font-face {
+  font-family: brandon-grotesque;
+  src: url('./fonts/Brandon_med.otf') format('opentype');
+}
+
+:root {
+  --primary-color: #C00000;
+  --primary-hover: #f44b4b;
+  --secondary-color: #efefef;
+}
+
 .justify-content-even {
     justify-content: space-evenly;
 }
 
 body {
-    background-color: #d9d9d9;
+  background-color: #d9d9d9;
+  font-family: 'brandon-grotesque', sans-serif;
 }
 
 #main-nav {
-    background-color: black;
+  background-color: white;
+  border-bottom: 1px solid var(--primary-color) !important;
+}
+
+#brand-title {
+  color: var(--primary-color);
+  text-decoration: none !important;
+  letter-spacing: .25rem;
+  font-size: 2rem;
 }
 
 .navbar-brand {
@@ -37,16 +57,78 @@ a {
   color: #0366d6;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.modal-content {
+  border-radius: 0;
+}
+
+.btn {
+  border-radius: 0 !important;
+}
+
+.btn-main {
+  color: #fff !important;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-main:hover {
+  color: white;
+  background-color: var(--primary-hover);
+  border-color: var(--primary-color);
+}
+
+.btn-secondary {
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  border-radius: 0 !important;
+}
+
+.btn-secondary:hover {
+  color: var(--primary-color);
+  background-color: #fcfcfc;
+  border-color: var(--primary-color);
+}
+
+
+
+.form-control {
+  border-radius: 0 !important;
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+  border: 1px solid var(--primary-color);
+}
+
+.dropdown-toggle {
+  border-radius: 0 !important;
+}
+
+.dropdown-toggle:focus {
+  box-shadow: none !important;
+  border: 1px solid var(--primary-color);
+}
+
+.dropdown-item.active {
+  color: var(--primary-color);
+  background-color:#e5e5e5;
+}
+
+.dropdown-item:active {
+  color: black;
+  background-color:#e5e5e5;
+}
+
+.dropdown-menu {
+  border-radius: 0;
+  border-top: none;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 /* Sticky footer styles

@@ -69,7 +69,7 @@ namespace ElixrMarket.Web
                 });
 
             services.AddScoped<IProductsService, EFCoreProductsService>();
-            services.AddScoped<IEditorService, EFCoreEditorService>();
+            services.AddScoped<IProductRelationshipService, EFCoreProdRelService>();
             services.AddScoped<DbSeeder>();
         }
 

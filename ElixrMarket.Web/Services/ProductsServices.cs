@@ -15,6 +15,8 @@ namespace ElixrMarket.Web.Services
         Task<List<UserProduct>> GetUserProducts(Guid userId);
         Task<List<Product>> GetProductsById(string ids);
         Task<List<Product>> GetAllProducts();
+        Task CreateUserProduct(int productId, Guid userId, UserProductRelationship relationshipType);
+        //Task removeUserProduct(int userProductId);
     }
 
     public class EFCoreProductsService : IProductsService
@@ -62,38 +64,34 @@ namespace ElixrMarket.Web.Services
         {
             return await _context.UserProducts.Include(up => up.Product).Where(up => up.UserId == userId).ToListAsync();
         }
-    }
 
-    public class MockProductsService : IProductsService
-    {
-        private readonly ElixrDataContext _context;
-        private readonly ILogger<MockProductsService> _logger;
-
-        
-
-        public MockProductsService(ILogger<MockProductsService> logger)
+        public async Task CreateUserProduct(int productId, Guid userId, UserProductRelationship relationshipType)
         {
-            _logger = logger;
-        }
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
 
-        public async Task<Product> GetProductById(int id)
-        {
-            throw new NotImplementedException();
-            //return products.FirstOrDefault(p => p.Id == id);
-        }
+            switch (relationshipType)
+            {
+                case UserProductRelationship.TechnicalReviewership:
+                    product.Status = ProductStatus.UnderTechnicalReview;
+                    break;
+                case UserProductRelationship.ContentReviewership:
+                    product.Status = ProductStatus.UnderContentReview;
+                    break;
+                default:
+                    break;
+            }
 
-        public async Task<List<Product>> GetProductsById(string ids)
-        {
-            throw new NotImplementedException();
-        }
-        public async Task<List<Product>> GetAllProducts()
-        {
-            throw new NotImplementedException();
-        }
+            var relationship = new UserProduct
+            {
+                UserId = userId,
+                ProductId = productId,
+                Relationship = relationshipType,
+                Active = true
+            };
 
-        public Task<List<UserProduct>> GetUserProducts(Guid userId)
-        {
-            throw new NotImplementedException();
+            _context.Add(relationship);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

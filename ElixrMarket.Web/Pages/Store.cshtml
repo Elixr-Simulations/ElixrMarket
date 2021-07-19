@@ -4,43 +4,58 @@
 }
 
 <div id="store">
-    <div id="filter-container">
-        <div>
-            <span>Genres:</span>
-            <select id="categories" multiple="multiple">
-                <option value="education">Education</option>
-                <option value="medical">Medical</option>
-                <option value="enterprise">Enterprise</option>
-            </select>
+    <div id="store-container">
+        <div id="controls-container">
+        <div id="filters-container">
+            <div>
+                <span>Genres:</span>
+                <select id="categories" multiple="multiple">
+                    <option value="education">Education</option>
+                    <option value="medical">Medical</option>
+                    <option value="enterprise">Enterprise</option>
+                </select>
+            </div>
+            <div>
+                <span>Application Types:</span>
+                <select id="app-types" multiple="multiple">
+                    <option value="VR">VR</option>
+                    <option value="AR">AR</option>
+                </select>
+            </div>
         </div>
-        <div>
-            <span>Application Types:</span>
-            <select id="app-types" multiple="multiple">
-                <option value="VR">VR</option>
-                <option value="AR">AR</option>
-            </select>
+        <div class="d-flex">
+            <input type="text" class="form-control" placeholder="Search..." />
+            <button class="btn btn-main"><i class="fas fa-search"></i></button>
         </div>
     </div>
-    <hr />
+    <hr id="separator" />
     <div id="list-container">
-        @foreach (var product in Model.Products)
+        @if (Model.Products.Count > 0)
         {
-            string href = $"/Details/{product.Id}";
+            @foreach (var product in Model.Products)
+            {
+                string href = $"/Details/{product.Id}";
 
-            <input type="hidden" id="@product.Id-id" value="@product.Id" />
-            <input type="hidden" id="@product.Id-price" value="@product.Price" />
-            <input type="hidden" id="@product.Id-name" value="@product.Name" />
-            <div class="product-container" >
-                <a class="img-container" href="@href">
-                    <img src="~/@product.ThumbnailPath" alt="Thumbnail" />   
-                </a>
-                <div class="text-container">
-                    <a class="detail-link" href="@href">@product.Name - $@product.Price</a>
-                    <button class="cart-btn" onclick="addToCart(@product.Id)"><i class="fas fa-cart-plus"></i> </button>
-                </div>
-            </div>
-            
+                <input type="hidden" id="@product.Id-id" value="@product.Id" />
+                <input type="hidden" id="@product.Id-price" value="@product.Price" />
+                <input type="hidden" id="@product.Id-name" value="@product.Name" />
+                <div class="product-container" >
+                    <a class="img-container" href="@href">
+                        <img src="~/@product.ThumbnailPath" alt="Thumbnail" />   
+                    </a>
+                    <div class="text-container">
+                        <a class="detail-link" href="@href">@product.Name - $@product.Price</a>
+                        <button class="cart-btn" onclick="addToCart(@product.Id)"><i class="fas fa-cart-plus"></i> </button>
+                    </div>
+                </div>    
+            }   
         }
+        else
+        {
+            <p class="mt-3">There are no items in the store.</p>
+        }
+    </div>
+    
     </div>
 
     <script src="~/js/add-cart.js"></script>
@@ -63,6 +78,11 @@
     </script>
 
     <style>
+        #store #store-container {
+            background-color: white;
+            box-shadow: 0 0 2px .5px #B8B8B8; 
+            padding: 1rem;  
+        }
         #store #list-container {
             display: flex;
             flex-wrap: wrap;
@@ -70,24 +90,24 @@
             gap: 1rem;
         }
 
-        #store #filter-container {
+        #store #controls-container {
             display: flex;
             gap: 2rem;
             background-color: white;
-            border: 1px solid #B8B8B8;
-            border-radius: .5rem;
             padding: .5rem 3rem;
         }
 
-            #store #filter-container > div {
-                border-right: 1px solid grey;
-                padding-right: 1rem;
+            #store #controls-container > div {
                 margin-top: .5rem;
                 margin-bottom: .5rem;
+                margin-right: 1rem;
+                margin-left: 1rem;
             }
 
-        #store #categories #app-types {
-            background-color: white;
+        #store #filters-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
         }
 
         #store .product-container {
@@ -141,6 +161,10 @@
             border-radius: .3rem;
             border: 1px solid grey;
             padding: .3rem;
+        }
+
+        #store #separator {
+            border-top: 1px solid black;
         }
     </style>
 </div>

@@ -1,8 +1,21 @@
 ﻿@page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "The Elixr Seal";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div id="about">
+    <div id="main-container">
+        <h4>@ViewData["Title"]</h4>
+        <hr/>
+        Use this page to detail your site's privacy policy.
+    </div>
+
+    <style>
+        #main-container {
+            background-color: white;
+            padding: 2rem;
+            box-shadow: 0 0 2px .5px #B8B8B8;
+        }
+    </style>
+</div>

@@ -22,7 +22,7 @@ namespace ElixrMarket.Web.Pages
             {
                 return new RedirectToPageResult("/editorhome");
             }
-            if (HttpContext.User.IsInRole(Constants.Roles.Reviewer))
+            if (HttpContext.User.IsInRole(Constants.Roles.ContentReviewer) || HttpContext.User.IsInRole(Constants.Roles.TechnicalReviewer))
             {
                 return new RedirectToPageResult("/reviewerhome");
             }

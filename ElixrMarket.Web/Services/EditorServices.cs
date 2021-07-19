@@ -10,52 +10,57 @@ using System.Threading.Tasks;
 
 namespace ElixrMarket.Web.Services
 {
-    public interface IEditorService
+    public interface IProductRelationshipService
     {
-        Task AssignReviewer(Product productId, Guid reviewerId, Guid editorId);
+        Task CreateUserProduct(int productId, Guid userId, UserProductRelationship relationshipType);
         Task RemoveReviewer(int userProductId);
     }
 
-    public class EFCoreEditorService : IEditorService
+    public class EFCoreProdRelService : IProductRelationshipService
     {
         private readonly ElixrDataContext _context;
-        private readonly ILogger<EFCoreEditorService> _logger;
+        private readonly ILogger<EFCoreProdRelService> _logger;
 
-        public EFCoreEditorService(ElixrDataContext context, ILogger<EFCoreEditorService> logger)
+        public EFCoreProdRelService(ElixrDataContext context, ILogger<EFCoreProdRelService> logger)
         {
             _context = context;
             _logger = logger;
         }
 
-        public async Task AssignReviewer(Product product, Guid reviewerId, Guid editorId)
+        public async Task CreateUserProduct(int productId, Guid userId, UserProductRelationship relationshipType)
         {
-            product.Status = ProductStatus.UnderReview;
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
 
-            var reviewership = new UserProduct
+            switch (relationshipType)
             {
-                UserId = reviewerId,
-                ProductId = product.Id,
-                Relationship = UserProductRelationship.Reviewership
+                case UserProductRelationship.TechnicalReviewership:
+                    product.Status = ProductStatus.UnderTechnicalReview;
+                    break;
+                case UserProductRelationship.ContentReviewership:
+                    product.Status = ProductStatus.UnderContentReview;
+                    break;
+                default:
+                    break;
+            }
+
+            var relationship = new UserProduct
+            {
+                UserId = userId,
+                ProductId = productId,
+                Relationship = relationshipType,
+                Active = true
             };
 
-            var editorship = new UserProduct
-            {
-                UserId = editorId,
-                ProductId = product.Id,
-                Relationship = UserProductRelationship.Editorship
-            };
-
-            _context.Add(reviewership);
-            _context.Add(editorship);
+            _context.Add(relationship);
 
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task RemoveReviewer(int userProductId)
         {
             // get reviewership
             var reviewership = await _context.UserProducts.Include(p => p.Product).FirstOrDefaultAsync(r => r.Id == userProductId);
-            reviewership.Product.Status = ProductStatus.PendingAssignment;
+            reviewership.Product.Status = ProductStatus.PendingTechnicalAssignment;
 
             // get associated editorship
             var editorship = await _context.UserProducts.FirstOrDefaultAsync(r => r.ProductId == reviewership.ProductId && r.Relationship == UserProductRelationship.Editorship);

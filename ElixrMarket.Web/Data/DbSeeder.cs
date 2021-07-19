@@ -135,24 +135,50 @@ namespace ElixrMarket.Web.Data
                 }
             }
 
-            var reviewers = _userManager.GetUsersInRoleAsync(Constants.Roles.Reviewer).Result;
+            var contentReviewers = _userManager.GetUsersInRoleAsync(Constants.Roles.ContentReviewer).Result;
 
-            if (reviewers.Count == 0)
+            if (contentReviewers.Count == 0)
             {
                 for (int i = 1; i < 6; i++)
                 {
                     var reviewer = new ElixrUser
                     {
-                        Email = "reviewer" + i + "@email.com",
+                        Email = "contentreviewer" + i + "@email.com",
                         EmailConfirmed = true,
-                        UserName = "Reviewer" + i,
+                        UserName = "ContentReviewer" + i,
                     };
 
                     try
                     {
                         var result = _userManager.CreateAsync(reviewer).Result;
                         result = _userManager.AddPasswordAsync(reviewer, "P@$$W0rd").Result;
-                        result = _userManager.AddToRoleAsync(reviewer, Constants.Roles.Reviewer).Result;
+                        result = _userManager.AddToRoleAsync(reviewer, Constants.Roles.ContentReviewer).Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
+                }
+            }
+
+            var techReviewers = _userManager.GetUsersInRoleAsync(Constants.Roles.TechnicalReviewer).Result;
+
+            if (techReviewers.Count == 0)
+            {
+                for (int i = 1; i < 6; i++)
+                {
+                    var reviewer = new ElixrUser
+                    {
+                        Email = "techreviewer" + i + "@email.com",
+                        EmailConfirmed = true,
+                        UserName = "TechReviewer" + i,
+                    };
+
+                    try
+                    {
+                        var result = _userManager.CreateAsync(reviewer).Result;
+                        result = _userManager.AddPasswordAsync(reviewer, "P@$$W0rd").Result;
+                        result = _userManager.AddToRoleAsync(reviewer, Constants.Roles.TechnicalReviewer).Result;
                     }
                     catch (Exception ex)
                     {
@@ -185,10 +211,17 @@ namespace ElixrMarket.Web.Data
                 var result = _roleManager.CreateAsync(role).Result;
             }
 
-            if (!_roleManager.RoleExistsAsync(Constants.Roles.Reviewer).Result)
+            if (!_roleManager.RoleExistsAsync(Constants.Roles.ContentReviewer).Result)
             {
                 var role = new IdentityRole<Guid>();
-                role.Name = Constants.Roles.Reviewer;
+                role.Name = Constants.Roles.ContentReviewer;
+                var result = _roleManager.CreateAsync(role).Result;
+            }
+            
+            if (!_roleManager.RoleExistsAsync(Constants.Roles.TechnicalReviewer).Result)
+            {
+                var role = new IdentityRole<Guid>();
+                role.Name = Constants.Roles.TechnicalReviewer;
                 var result = _roleManager.CreateAsync(role).Result;
             }
 

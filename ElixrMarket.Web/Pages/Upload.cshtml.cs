@@ -62,6 +62,7 @@ namespace ElixrMarket.Web.Pages
             [FromForm]string maxCPU,
             [FromForm]string maxGPU,
             [FromForm]string maxRAM,
+            [FromForm]string appLink,
             [FromForm]IFormFileCollection carouselMedia,
             [FromForm]IFormFile thumbPhoto) {
             try
@@ -79,6 +80,7 @@ namespace ElixrMarket.Web.Pages
                     maxCPU,
                     maxGPU,
                     maxRAM,
+                    appLink,
                     thumbPhoto,
                     carouselMedia);              
 
@@ -159,6 +161,7 @@ namespace ElixrMarket.Web.Pages
             string maxCPU,
             string maxGPU,
             string maxRAM,
+            string appLink,
             IFormFile thumbPhoto,
             IFormFileCollection carouselMedia) {
             var requirements = new Requirements {
@@ -179,10 +182,14 @@ namespace ElixrMarket.Web.Pages
                 ReleaseDate = DateTime.MinValue,
                 Genres = genres,
                 Price = price,
-                Status = ProductStatus.PendingAssignment,
+                Status = ProductStatus.PendingTechnicalAssignment,
                 Requirements = requirements,
-                
             };
+
+            if (!string.IsNullOrWhiteSpace(appLink))
+            {
+                uploadedProduct.Url = appLink;
+            }
 
             try
             {
