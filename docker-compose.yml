@@ -1,7 +1,7 @@
 version: "3"
 services: 
     app: 
-        image: cdmoss/elixr
+        image: cdmoss/elixr-market
         ports: 
             - "5000:5000"
     proxy: 
